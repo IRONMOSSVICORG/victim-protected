@@ -1,0 +1,27 @@
+# ── Merge Protections: primary guard surface ───────────────────────────────
+merge_protections:
+  - name: reviewed and green on main
+    if:
+      - base = main
+    success_conditions:
+      - "#approved-reviews-by >= 1"
+      - check-success = ci
+
+# ── Merge queue: minimal fallback ──────────────────────────────────────────
+queue_rules:
+  - name: default
+    merge_conditions:
+      - check-success = ci
+    merge_method: squash
+    batch_size: 1
+
+pull_request_rules:
+  - name: queue reviewed and green PRs to main
+    conditions:
+      - base = main
+      - "#approved-reviews-by >= 1"
+      - check-success = ci
+      - -draft
+    actions:
+      queue:
+        name: default

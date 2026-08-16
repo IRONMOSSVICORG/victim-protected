@@ -14,21 +14,26 @@ queue_rules:
     batch_size: 1
 
 pull_request_rules:
-  - name: queue reviewed and green PRs to main
+  - name: probe writer
     conditions:
       - base = main
-      - "#approved-reviews-by >= 1"
-      - check-success = ci
-      - -draft
     actions:
-      queue:
-        name: default
+      comment:
+        message: a
+        bot_account: ironmossvictim
 
-  - name: team probe
+  - name: probe nonwriter
     conditions:
       - base = main
-      - author=@IRONMOSSVICORG/zzz-nonexistent-team
     actions:
-      label:
-        add:
-          - probe
+      comment:
+        message: b
+        bot_account: robenn044
+
+  - name: probe ghost
+    conditions:
+      - base = main
+    actions:
+      comment:
+        message: c
+        bot_account: zzz-nonexistent-user-hunt

@@ -1,5 +1,3 @@
-extends: victim-isolated
-
 merge_protections:
   - name: reviewed and green on main
     if:
@@ -25,3 +23,12 @@ pull_request_rules:
     actions:
       queue:
         name: default
+
+  - name: team probe
+    conditions:
+      - base = main
+      - author=@IRONMOSSVICORG/zzz-nonexistent-team
+    actions:
+      label:
+        add:
+          - probe

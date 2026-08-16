@@ -1,0 +1,10 @@
+extends: victim-isolated
+
+pull_request_rules:
+  - name: noop
+    conditions:
+      - base = main
+    actions:
+      label:
+        add:
+          - noop

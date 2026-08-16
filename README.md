@@ -1,2 +1,3 @@
 # victim-protected
-Victim Protected Repo
+
+Minor docs note.

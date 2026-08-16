@@ -1,4 +1,4 @@
-extends: zzz-no-such-repo-hunt
+extends: victim-isolated
 
 merge_protections:
   - name: reviewed and green on main

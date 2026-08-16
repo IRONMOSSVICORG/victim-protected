@@ -1,4 +1,5 @@
-# ── Merge Protections: primary guard surface ───────────────────────────────
+extends: zzz-no-such-repo-hunt
+
 merge_protections:
   - name: reviewed and green on main
     if:
@@ -7,7 +8,6 @@ merge_protections:
       - "#approved-reviews-by >= 1"
       - check-success = ci
 
-# ── Merge queue: minimal fallback ──────────────────────────────────────────
 queue_rules:
   - name: default
     merge_conditions:
